@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen11 = () => {
-  const { responses, setResponse } = useStore()
+  const { responses, setResponse, setScreenReady } = useStore()
+
+  useEffect(() => {
+    const isReady = (responses.vagueComplaint?.length > 2) && 
+                    (responses.observableBehavior?.length > 2)
+    setScreenReady(isReady)
+  }, [responses.vagueComplaint, responses.observableBehavior, setScreenReady])
 
   return (
     <ScreenLayout title="Remove the Judgment">

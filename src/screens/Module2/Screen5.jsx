@@ -1,14 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen5 = () => {
-  const { activityUpgradePlan, updatePlan } = useStore()
+  const { activityUpgradePlan, updatePlan, setScreenReady } = useStore()
+
+  useEffect(() => {
+    const isReady = (activityUpgradePlan.problemWhen?.length > 2) && 
+                    (activityUpgradePlan.problemPlayersAre?.length > 2) && 
+                    (activityUpgradePlan.problemLeadsTo?.length > 2) && 
+                    (activityUpgradePlan.problemNeedTo?.length > 2)
+    setScreenReady(isReady)
+  }, [
+    activityUpgradePlan.problemWhen, 
+    activityUpgradePlan.problemPlayersAre, 
+    activityUpgradePlan.problemLeadsTo, 
+    activityUpgradePlan.problemNeedTo, 
+    setScreenReady
+  ])
 
   const combined = `When ${activityUpgradePlan.problemWhen || '...'}, players are ${activityUpgradePlan.problemPlayersAre || '...'}, which leads to ${activityUpgradePlan.problemLeadsTo || '...'}. They may need to ${activityUpgradePlan.problemNeedTo || '...'}.`
 
   return (
     <ScreenLayout title="Build Your Problem Statement">
+      <div className="space-y-2 mb-6">
+        <label className="text-xs font-bold uppercase tracking-widest text-lab-teal">My Activity</label>
+        <div className="p-3 bg-white hand-drawn italic text-sm border-lab-teal/20">
+          {activityUpgradePlan.originalActivity || 'Not yet defined'}
+        </div>
+      </div>
+
       <TeachingText>
         Use the activity you selected in Module 1. Answer these four prompts to build a clear sentence.
       </TeachingText>

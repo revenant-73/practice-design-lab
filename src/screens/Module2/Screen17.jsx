@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen17 = () => {
-  const { activityUpgradePlan, updatePlan, responses, setResponse } = useStore()
+  const { activityUpgradePlan, updatePlan, responses, setResponse, setScreenReady } = useStore()
+
+  useEffect(() => {
+    const isReady = (responses.vagueComplaint?.length > 2) && 
+                    (responses.specificSituation?.length > 2) && 
+                    (responses.specificBehavior?.length > 2) && 
+                    (responses.specificConsequence?.length > 2) && 
+                    (responses.specificMissingInfo?.length > 2)
+    setScreenReady(isReady)
+  }, [
+    responses.vagueComplaint,
+    responses.specificSituation,
+    responses.specificBehavior,
+    responses.specificConsequence,
+    responses.specificMissingInfo,
+    setScreenReady
+  ])
 
   const combined = `When ${responses.specificSituation || '...'}, players are ${responses.specificBehavior || '...'}, which results in ${responses.specificConsequence || '...'}. They may need to notice ${responses.specificMissingInfo || '...'} more clearly.`
 

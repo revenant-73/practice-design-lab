@@ -1,8 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ScreenLayout, Feedback } from '../../components/CourseComponents'
+import { useStore } from '../../store'
 
 const Screen9 = () => {
   const [selected, setSelected] = useState(null)
+  const { setScreenReady } = useStore()
+
+  useEffect(() => {
+    if (selected !== null) {
+      setScreenReady(true)
+    }
+  }, [selected, setScreenReady])
 
   const options = [
     "“Players need better possession.”",

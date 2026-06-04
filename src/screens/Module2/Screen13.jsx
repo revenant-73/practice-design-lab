@@ -1,7 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScreenLayout, TeachingText, KeyIdea } from '../../components/CourseComponents'
+import { useStore } from '../../store'
 
 const Screen13 = () => {
+  const { setScreenReady } = useStore()
+
+  useEffect(() => {
+    setScreenReady(true)
+  }, [setScreenReady])
+
   const categories = [
     { title: 'Space', text: 'Recognizing, creating, or protecting open space.' },
     { title: 'Timing', text: 'Acting too early, too late, or without reading the moment.' },

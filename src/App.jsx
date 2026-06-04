@@ -68,9 +68,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen max-w-lg mx-auto flex flex-col relative overflow-hidden shadow-2xl bg-lab-cream">
+    <div className="h-screen max-w-lg mx-auto flex flex-col relative overflow-hidden shadow-2xl bg-lab-cream">
       {/* Course Header */}
-      <header className="px-6 py-3 bg-lab-cream/95 backdrop-blur-md border-b-2 border-lab-ink/5 sticky top-0 z-40">
+      <header className="px-6 py-3 bg-lab-cream/95 backdrop-blur-md border-b-2 border-lab-ink/5 relative z-40">
         <div className="flex items-center justify-between gap-4">
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-1.5 mb-0.5">
@@ -137,7 +137,7 @@ function App() {
       </main>
 
       {/* Compact Navigation Bar */}
-      <footer className="sticky bottom-0 z-40 bg-lab-cream/95 backdrop-blur-md border-t-2 border-lab-ink/5 px-4 py-3 pb-safe">
+      <footer className="relative bottom-0 z-40 bg-lab-cream/95 backdrop-blur-md border-t-2 border-lab-ink/5 px-4 py-3 pb-safe">
         <div className="flex items-center justify-between gap-2 max-w-md mx-auto">
           <button
             onClick={() => setScreen(Math.max(0, currentScreen - 1))}

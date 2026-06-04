@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ScreenLayout, Feedback } from '../../components/CourseComponents'
+import { useStore } from '../../store'
 
 const quizData = [
   {
@@ -52,6 +53,13 @@ const Screen19 = () => {
   const [currentIdx, setCurrentIdx] = useState(0)
   const [selected, setSelected] = useState(null)
   const [completed, setCompleted] = useState(false)
+  const { setScreenReady } = useStore()
+
+  useEffect(() => {
+    if (completed) {
+      setScreenReady(true)
+    }
+  }, [completed, setScreenReady])
 
   const currentQuestion = quizData[currentIdx]
 
@@ -90,11 +98,6 @@ const Screen19 = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-lab-teal uppercase tracking-widest text-xs">Question {currentIdx + 1} of {quizData.length}</h3>
-            {selected !== null && (
-              <button onClick={handleNext} className="text-sm font-bold text-lab-teal underline">
-                {currentIdx < quizData.length - 1 ? 'Next Question' : 'Finish Quiz'}
-              </button>
-            )}
           </div>
           <p className="text-xl font-bold leading-tight">{currentQuestion.question}</p>
         </div>
@@ -125,7 +128,11 @@ const Screen19 = () => {
         </div>
 
         {selected !== null && (
-          <Feedback isCorrect={selected === currentQuestion.correct}>
+          <Feedback 
+            isCorrect={selected === currentQuestion.correct}
+            onNext={handleNext}
+            nextLabel={currentIdx < quizData.length - 1 ? "Next Question" : "Finish Quiz"}
+          >
             {currentQuestion.feedback}
           </Feedback>
         )}

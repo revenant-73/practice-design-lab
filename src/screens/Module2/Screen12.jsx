@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ScreenLayout, TeachingText, Feedback } from '../../components/CourseComponents'
+import { useStore } from '../../store'
 
 const statements = [
   {
@@ -27,12 +28,21 @@ const statements = [
 const Screen12 = () => {
   const [currentIdx, setCurrentIdx] = useState(0)
   const [selected, setSelected] = useState(null)
+  const { setScreenReady } = useStore()
+
+  useEffect(() => {
+    if (currentIdx === statements.length - 1 && selected !== null) {
+      setScreenReady(true)
+    }
+  }, [currentIdx, selected, setScreenReady])
 
   const current = statements[currentIdx]
 
   const handleNext = () => {
-    setSelected(null)
-    setCurrentIdx(currentIdx + 1)
+    if (currentIdx < statements.length - 1) {
+      setSelected(null)
+      setCurrentIdx(currentIdx + 1)
+    }
   }
 
   return (
@@ -45,9 +55,6 @@ const Screen12 = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-lab-teal uppercase tracking-widest text-xs">Statement {currentIdx + 1} of {statements.length}</h3>
-            {selected && currentIdx < statements.length - 1 && (
-              <button onClick={handleNext} className="text-sm font-bold text-lab-teal underline">Next Statement</button>
-            )}
           </div>
           <div className="p-6 bg-white hand-drawn min-h-[100px] flex items-center justify-center">
             <p className="text-xl font-medium text-center leading-snug italic">"{current.text}"</p>
@@ -79,7 +86,11 @@ const Screen12 = () => {
         </div>
 
         {selected && (
-          <Feedback isCorrect={selected === current.correct}>
+          <Feedback 
+            isCorrect={selected === current.correct}
+            onNext={currentIdx < statements.length - 1 ? handleNext : null}
+            nextLabel="Next Statement"
+          >
             {current.feedback}
           </Feedback>
         )}

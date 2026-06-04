@@ -1,8 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ScreenLayout, TeachingText, KeyIdea } from '../../components/CourseComponents'
+import { useStore } from '../../store'
 
 const Screen18 = () => {
   const [checks, setChecks] = useState(Array(7).fill(false))
+  const { setScreenReady } = useStore()
+
+  const count = checks.filter(Boolean).length
+
+  useEffect(() => {
+    setScreenReady(count >= 5)
+  }, [count, setScreenReady])
 
   const toggleCheck = (idx) => {
     const newChecks = [...checks]
@@ -19,8 +27,6 @@ const Screen18 = () => {
     "Could this problem happen inside a real game?",
     "Does it give you something to design around?"
   ]
-
-  const count = checks.filter(Boolean).length
 
   return (
     <ScreenLayout title="Is Your Problem Clear Enough?">

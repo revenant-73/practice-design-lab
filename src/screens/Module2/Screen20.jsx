@@ -1,7 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScreenLayout, TeachingText, KeyIdea } from '../../components/CourseComponents'
+import { useStore } from '../../store'
 
 const Screen20 = () => {
+  const { setScreenReady } = useStore()
+
+  useEffect(() => {
+    setScreenReady(true)
+  }, [setScreenReady])
+
   return (
     <ScreenLayout title="Module 2 Summary">
       <TeachingText>

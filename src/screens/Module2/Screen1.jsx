@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen1 = () => {
-  const { activityUpgradePlan, responses } = useStore()
+  const { activityUpgradePlan, responses, setScreenReady } = useStore()
+
+  useEffect(() => {
+    setScreenReady(true)
+  }, [setScreenReady])
 
   return (
     <ScreenLayout title="Where We Left Off">

@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen14 = () => {
-  const { responses, setResponse } = useStore()
+  const { responses, setResponse, setScreenReady } = useStore()
+
+  useEffect(() => {
+    const isReady = !!responses.selectedCategory && 
+                    (responses.specificSituation?.length > 2) && 
+                    (responses.specificBehavior?.length > 2) && 
+                    (responses.specificConsequence?.length > 2) && 
+                    (responses.specificMissingInfo?.length > 2)
+    setScreenReady(isReady)
+  }, [
+    responses.selectedCategory,
+    responses.specificSituation,
+    responses.specificBehavior,
+    responses.specificConsequence,
+    responses.specificMissingInfo,
+    setScreenReady
+  ])
 
   const categories = ['Space', 'Timing', 'Support', 'Pressure', 'Communication', 'Decision-making', 'Transition', 'Composure', 'Other']
 

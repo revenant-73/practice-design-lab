@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen9 = () => {
-  const { activityUpgradePlan, updatePlan, responses, setResponse } = useStore()
+  const { activityUpgradePlan, updatePlan, responses, setResponse, setScreenReady } = useStore()
+
+  useEffect(() => {
+    const isReady = (responses.oftenTell?.length > 2) && 
+                    (responses.behaviorWantMore?.length > 2) && 
+                    (activityUpgradePlan.problem?.length > 2)
+    setScreenReady(isReady)
+  }, [responses.oftenTell, responses.behaviorWantMore, activityUpgradePlan.problem, setScreenReady])
 
   return (
     <ScreenLayout title="Apply It to Your Activity">
