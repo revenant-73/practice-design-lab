@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+body {
+  background-color: #FDFCF0;
+  background-image: var(--bg-texture);
+  min-height: 100vh;
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 bg-lab-teal text-white font-semibold rounded-lg shadow-sm hover:bg-opacity-90 transition-all active:scale-95 disabled:opacity-50;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 border-2 border-lab-ink text-lab-ink font-semibold rounded-lg hover:bg-lab-ink hover:text-white transition-all active:scale-95;
+  }
+
+  .card {
+    @apply bg-white border border-lab-ink/10 rounded-xl p-6 shadow-sm;
+  }
+
+  .ink-border {
+    @apply border-2 border-lab-ink;
+  }
+
+  .hand-drawn {
+    @apply border-2 border-lab-ink rounded-[2px] shadow-[4px_4px_0px_0px_rgba(31,41,55,1)];
+  }
+}
