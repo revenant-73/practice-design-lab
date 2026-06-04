@@ -1,14 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { db } from './db'
-import { progress } from './db/schema'
-import { eq } from 'drizzle-orm'
 
 export const useStore = create(
   persist(
     (set, get) => ({
       currentScreen: 0,
-      userId: null, // Set this after login (e.g., from Clerk)
+      userId: null, // Set this after login
       activityUpgradePlan: {
         originalActivity: '',
         problem: '',
@@ -24,7 +21,7 @@ export const useStore = create(
       },
       responses: {},
       screenReady: false,
-      currentView: 'course', // 'course' or 'resources'
+      currentView: 'course',
       isSyncing: false,
       
       setUserId: (id) => set({ userId: id }),
@@ -46,21 +43,18 @@ export const useStore = create(
 
         set({ isSyncing: true })
         try {
-          await db.insert(progress).values({
-            userId: state.userId,
-            currentScreen: state.currentScreen,
-            activityUpgradePlan: state.activityUpgradePlan,
-            updatedAt: new Date(),
-          }).onConflictDoUpdate({
-            target: progress.userId,
-            set: {
+          const response = await fetch(`/api/sync?userId=${state.userId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
               currentScreen: state.currentScreen,
               activityUpgradePlan: state.activityUpgradePlan,
-              updatedAt: new Date(),
-            }
-          })
+            }),
+          });
+          
+          if (!response.ok) throw new Error('Failed to save');
         } catch (error) {
-          console.error('Failed to sync with Turso:', error)
+          console.error('Failed to sync progress:', error)
         } finally {
           set({ isSyncing: false })
         }
@@ -70,14 +64,13 @@ export const useStore = create(
         if (!userId) return;
         
         try {
-          const result = await db.query.progress.findFirst({
-            where: eq(progress.userId, userId)
-          })
+          const response = await fetch(`/api/sync?userId=${userId}`);
+          const data = await response.json();
           
-          if (result) {
+          if (data) {
             set({
-              currentScreen: result.currentScreen,
-              activityUpgradePlan: result.activityUpgradePlan,
+              currentScreen: data.currentScreen,
+              activityUpgradePlan: data.activityUpgradePlan,
             })
           }
         } catch (error) {
