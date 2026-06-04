@@ -16,6 +16,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Fraunces', 'serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
     },
   },
