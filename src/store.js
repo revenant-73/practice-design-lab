@@ -5,7 +5,8 @@ export const useStore = create(
   persist(
     (set, get) => ({
       currentScreen: 0,
-      userId: null, // Set this after login
+      userId: null, 
+      email: '',
       activityUpgradePlan: {
         originalActivity: '',
         problem: '',
@@ -85,8 +86,15 @@ export const useStore = create(
       screenReady: false,
       currentView: 'course',
       isSyncing: false,
+      hasAccess: false,
       
       setUserId: (id) => set({ userId: id }),
+      setEmail: (email) => {
+        const userId = btoa(email).replace(/=/g, '') // Simple stable ID from email
+        set({ email, userId })
+        return userId
+      },
+      setAccess: (access) => set({ hasAccess: access }),
       setScreen: (index) => set({ currentScreen: index, screenReady: false, currentView: 'course' }),
       setScreenReady: (ready) => set({ screenReady: ready }),
       setView: (view) => set({ currentView: view }),
@@ -109,6 +117,7 @@ export const useStore = create(
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              email: state.email,
               currentScreen: state.currentScreen,
               activityUpgradePlan: state.activityUpgradePlan,
             }),
@@ -131,8 +140,9 @@ export const useStore = create(
           
           if (data) {
             set({
-              currentScreen: data.currentScreen,
-              activityUpgradePlan: data.activityUpgradePlan,
+              currentScreen: data.progress?.currentScreen || 0,
+              activityUpgradePlan: data.progress?.activityUpgradePlan || get().activityUpgradePlan,
+              hasAccess: !!data.user?.hasAccess
             })
           }
         } catch (error) {

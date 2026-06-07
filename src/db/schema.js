@@ -4,6 +4,8 @@ export const users = sqliteTable('users', {
   id: text('id').primaryKey(), // Using Clerk/Auth ID
   email: text('email').notNull(),
   name: text('name'),
+  hasAccess: integer('has_access', { mode: 'boolean' }).notNull().default(false),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
 });
 

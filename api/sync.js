@@ -1,6 +1,6 @@
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
-import { progress } from '../src/db/schema';
+import { progress, users } from '../src/db/schema';
 import { eq } from 'drizzle-orm';
 
 const client = createClient({
@@ -19,13 +19,30 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const result = await db.select().from(progress).where(eq(progress.userId, userId)).get();
-      return res.status(200).json(result || null);
+      const user = await db.select().from(users).where(eq(users.id, userId)).get();
+      const userProgress = await db.select().from(progress).where(eq(progress.userId, userId)).get();
+      
+      return res.status(200).json({
+        user: user || null,
+        progress: userProgress || null
+      });
     } 
     
     if (req.method === 'POST') {
-      const { currentScreen, activityUpgradePlan } = req.body;
+      const { currentScreen, activityUpgradePlan, email } = req.body;
       
+      // Ensure user exists
+      if (email) {
+        await db.insert(users).values({
+          id: userId,
+          email,
+          updatedAt: new Date(),
+        }).onConflictDoUpdate({
+          target: users.id,
+          set: { updatedAt: new Date() }
+        });
+      }
+
       await db.insert(progress).values({
         userId,
         currentScreen,

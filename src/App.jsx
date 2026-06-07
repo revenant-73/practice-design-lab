@@ -155,6 +155,7 @@ import PCS6 from './screens/PostCourse/Screen6'
 
 import Resources from './screens/Resources'
 import RetrievalScreen from './screens/RetrievalScreen'
+import AccessRequired from './screens/AccessRequired'
 
 // Retrieval Screens
 const M3Retrieval = () => (
@@ -244,10 +245,14 @@ const screens = [
 ]
 
 function App() {
-  const { currentScreen, setScreen, screenReady, currentView, setView, reset, saveProgress, isSyncing } = useStore()
+  const { currentScreen, setScreen, screenReady, currentView, setView, reset, saveProgress, isSyncing, hasAccess } = useStore()
   const [saveStatus, setSaveStatus] = useState(false)
   
-  const CurrentScreenComponent = currentView === 'resources' ? Resources : (screens[currentScreen] || LandingPage)
+  const isGateOpen = hasAccess || currentScreen < 11
+  const CurrentScreenComponent = currentView === 'resources' 
+    ? Resources 
+    : (!isGateOpen ? AccessRequired : (screens[currentScreen] || LandingPage))
+
   const progress = ((currentScreen + 1) / screens.length) * 100
 
   const moduleInfo = useMemo(() => {

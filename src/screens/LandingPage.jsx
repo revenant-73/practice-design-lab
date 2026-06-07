@@ -1,13 +1,32 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScreenLayout, TeachingText, KeyIdea, VisualPlaceholder } from '../components/CourseComponents'
 import { useStore } from '../store'
+import { Mail, ArrowRight, CheckCircle2 } from 'lucide-react'
 
 const LandingPage = () => {
-  const { setScreenReady } = useStore()
+  const { setScreenReady, email, setEmail, loadProgress, setScreen } = useStore()
+  const [localEmail, setLocalEmail] = useState(email)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isIdentified, setIsIdentified] = useState(!!email)
 
   useEffect(() => {
-    setScreenReady(true)
-  }, [setScreenReady])
+    // Landing page is always ready to move forward if identified
+    setScreenReady(isIdentified)
+  }, [isIdentified, setScreenReady])
+
+  const handleIdentify = async (e) => {
+    e.preventDefault()
+    if (!localEmail || !localEmail.includes('@')) return
+
+    setIsSubmitting(true)
+    const userId = setEmail(localEmail)
+    await loadProgress(userId)
+    // Save progress immediately to create/update user in DB
+    const { saveProgress } = useStore.getState()
+    await saveProgress()
+    setIsIdentified(true)
+    setIsSubmitting(false)
+  }
 
   return (
     <ScreenLayout title="The Power of Constraints">
@@ -27,6 +46,53 @@ const LandingPage = () => {
       </VisualPlaceholder>
 
       <div className="space-y-6 pt-4">
+        {/* Identity Section */}
+        {!isIdentified ? (
+          <div className="bg-white p-6 hand-drawn border-2 border-lab-teal/20 space-y-4">
+            <div className="flex items-center gap-3">
+              <Mail size={18} className="text-lab-teal" />
+              <h3 className="font-mono font-bold text-lab-teal uppercase tracking-[0.2em] text-[10px]">Identify for Field Session</h3>
+            </div>
+            <TeachingText className="text-xs italic text-lab-ink/60">
+              Enter your email to save your progress and access your Activity Upgrade Plan across devices.
+            </TeachingText>
+            <form onSubmit={handleIdentify} className="space-y-3">
+              <input
+                type="email"
+                required
+                className="w-full bg-lab-cream/50 border-2 border-lab-ink/5 rounded-lg px-4 py-3 outline-none focus:border-lab-teal transition-all text-sm font-sans"
+                placeholder="coach@yourclub.com"
+                value={localEmail}
+                onChange={(e) => setLocalEmail(e.target.value)}
+              />
+              <button 
+                type="submit"
+                disabled={isSubmitting || !localEmail.includes('@')}
+                className="w-full bg-lab-ink text-white py-3 rounded-lg font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:bg-lab-teal transition-colors disabled:opacity-50"
+              >
+                {isSubmitting ? 'Verifying...' : 'Initialize Session'}
+                <ArrowRight size={14} />
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="bg-lab-teal/5 p-4 hand-drawn border-2 border-lab-teal/30 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 size={20} className="text-lab-teal" />
+              <div>
+                <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-teal">Session Active</p>
+                <p className="text-sm font-sans font-medium text-lab-ink/80">{email}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsIdentified(false)}
+              className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 hover:text-lab-coral transition-colors"
+            >
+              Change
+            </button>
+          </div>
+        )}
+
         <section className="space-y-2">
           <h3 className="font-mono font-bold text-lab-teal uppercase tracking-[0.2em] text-[10px]">What is a Constraint?</h3>
           <TeachingText>
@@ -42,30 +108,6 @@ const LandingPage = () => {
         <KeyIdea>
           Constraints don't just restrict; they create the possibilities for skill to emerge.
         </KeyIdea>
-
-        <section className="space-y-2">
-          <h3 className="font-mono font-bold text-lab-teal uppercase tracking-[0.2em] text-[10px]">The Constraints-Led Approach (CLA)</h3>
-          <TeachingText>
-            Instead of "telling" players the answer, we <strong className="text-lab-teal">manipulate the environment</strong> to guide them toward discovering solutions themselves.
-          </TeachingText>
-        </section>
-
-        <section className="space-y-2">
-          <h3 className="font-mono font-bold text-lab-teal uppercase tracking-[0.2em] text-[10px]">Inviting vs. Restricting</h3>
-          <TeachingText>
-            A weak constraint simply shuts down options (e.g., "don't do that"). 
-          </TeachingText>
-          <TeachingText>
-            A <strong className="text-lab-teal">great constraint</strong> changes the landscape of the practice to <strong className="text-lab-teal">afford</strong> action—inviting players to explore and find new ways to succeed.
-          </TeachingText>
-        </section>
-
-        <div className="pt-4 p-4 hand-drawn bg-lab-teal/5 border-l-4 border-lab-teal">
-          <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-teal mb-1">Your Mission</p>
-          <p className="text-sm text-lab-ink/80 leading-relaxed italic">
-            In this lab, you will learn how to design constraints that invite exploration rather than shut it down—transforming simple rules into powerful tools for learning.
-          </p>
-        </div>
       </div>
     </ScreenLayout>
   )
