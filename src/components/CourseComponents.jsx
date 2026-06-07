@@ -107,8 +107,63 @@ export const VisualPlaceholder = ({ label, caption, children, className = "" }) 
   </div>
 )
 
-export const Quiz = ({ question, options, correctAnswer, onCorrect, onIncorrect }) => {
+export const WorkedExample = ({ title, activity, problem, target, lever, constraint, success, question, why }) => (
+  <div className="space-y-6">
+    <div className="bg-white p-6 rounded-2xl border-2 border-lab-ink/5 space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 mb-1">Original Activity</p>
+          <p className="text-xs font-bold leading-tight">{activity}</p>
+        </div>
+        <div>
+          <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 mb-1">Lever</p>
+          <p className="text-xs font-bold text-lab-teal leading-tight">{lever}</p>
+        </div>
+      </div>
+      
+      <div>
+        <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-coral mb-1">Problem</p>
+        <p className="text-xs italic text-lab-ink/80 leading-snug">{problem}</p>
+      </div>
+
+      <div>
+        <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-teal mb-1">Attention Target</p>
+        <p className="text-xs font-bold leading-tight">{target}</p>
+      </div>
+
+      <div className="pt-4 border-t border-lab-ink/5">
+        <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-teal mb-2">The Upgrade</p>
+        <div className="space-y-3">
+          <div>
+            <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 mb-1">Constraint</p>
+            <p className="text-xs font-medium leading-snug">{constraint}</p>
+          </div>
+          <div>
+            <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 mb-1">Success Condition</p>
+            <p className="text-xs italic leading-snug text-lab-ink/70">{success}</p>
+          </div>
+          <div>
+            <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 mb-1">Coaching Question</p>
+            <p className="text-xs font-bold text-lab-teal leading-tight">“{question}”</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="hand-drawn bg-lab-teal/5 border-l-4 border-lab-teal p-4">
+      <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-teal mb-1">Why It Works</p>
+      <p className="text-xs text-lab-ink/80 leading-relaxed">{why}</p>
+    </div>
+  </div>
+)
+
+export const Quiz = ({ question, options, correctAnswer, onSelect }) => {
   const [selected, setSelected] = React.useState(null)
+
+  const handleSelect = (idx) => {
+    setSelected(idx)
+    if (onSelect) onSelect(idx)
+  }
 
   return (
     <div className="space-y-4">
@@ -142,7 +197,7 @@ export const Quiz = ({ question, options, correctAnswer, onCorrect, onIncorrect 
             <button
               key={idx}
               disabled={showFeedback}
-              onClick={() => setSelected(idx)}
+              onClick={() => handleSelect(idx)}
               className={`w-full text-left p-3 rounded-lg border-2 transition-all duration-300 relative overflow-hidden group ${borderColor} ${bgColor} ${!showFeedback && 'hover:border-lab-teal/40 hover:translate-x-1 shadow-sm'}`}
             >
               <div className="flex gap-4 items-center">
@@ -158,3 +213,18 @@ export const Quiz = ({ question, options, correctAnswer, onCorrect, onIncorrect 
     </div>
   )
 }
+
+export const ReflectionBox = ({ value, onChange, placeholder, minHeight = "120px" }) => (
+  <div className="relative group">
+    <textarea
+      value={value || ''}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      style={{ minHeight }}
+      className="w-full p-6 bg-white hand-drawn italic text-base font-sans focus:ring-2 focus:ring-lab-teal outline-none border-2 border-lab-ink/5 resize-none transition-shadow hover:shadow-md"
+    />
+    <div className="absolute bottom-4 right-4 opacity-10 group-focus-within:opacity-30 transition-opacity">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+    </div>
+  </div>
+)
