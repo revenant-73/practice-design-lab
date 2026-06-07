@@ -32,13 +32,35 @@ import M2S17 from './screens/Module2/Screen17'
 import M2S18 from './screens/Module2/Screen18'
 import M2S19 from './screens/Module2/Screen19'
 import M2S20 from './screens/Module2/Screen20'
+import M3S1 from './screens/Module3/Screen1'
+import M3S2 from './screens/Module3/Screen2'
+import M3S3 from './screens/Module3/Screen3'
+import M3S4 from './screens/Module3/Screen4'
+import M3S5 from './screens/Module3/Screen5'
+import M3S6 from './screens/Module3/Screen6'
+import M3S7 from './screens/Module3/Screen7'
+import M3S8 from './screens/Module3/Screen8'
+import M3S9 from './screens/Module3/Screen9'
+import M3S10 from './screens/Module3/Screen10'
+import M3S11 from './screens/Module3/Screen11'
+import M3S12 from './screens/Module3/Screen12'
+import M3S13 from './screens/Module3/Screen13'
+import M3S14 from './screens/Module3/Screen14'
+import M3S15 from './screens/Module3/Screen15'
+import M3S16 from './screens/Module3/Screen16'
+import M3S17 from './screens/Module3/Screen17'
+import M3S18 from './screens/Module3/Screen18'
+import M3S19 from './screens/Module3/Screen19'
+import M3S20 from './screens/Module3/Screen20'
 import Resources from './screens/Resources'
 
 const screens = [
   Screen1, Screen2, Screen3, Screen4, Screen5,
   Screen6, Screen7, Screen8, Screen9, Screen10,
   M2S1, M2S2, M2S3, M2S4, M2S5, M2S6, M2S7, M2S8, M2S9, M2S10,
-  M2S11, M2S12, M2S13, M2S14, M2S15, M2S16, M2S17, M2S18, M2S19, M2S20
+  M2S11, M2S12, M2S13, M2S14, M2S15, M2S16, M2S17, M2S18, M2S19, M2S20,
+  M3S1, M3S2, M3S3, M3S4, M3S5, M3S6, M3S7, M3S8, M3S9, M3S10,
+  M3S11, M3S12, M3S13, M3S14, M3S15, M3S16, M3S17, M3S18, M3S19, M3S20
 ]
 
 function App() {
@@ -52,7 +74,8 @@ function App() {
   const moduleInfo = useMemo(() => {
     if (currentScreen < 10) return { number: 1, title: "What Constraints Do" }
     if (currentScreen < 30) return { number: 2, title: "Start With the Problem" }
-    return { number: 3, title: "Designing the Upgrade" }
+    if (currentScreen < 50) return { number: 3, title: "Decide What Players Need to Notice" }
+    return { number: 4, title: "Designing the Upgrade" }
   }, [currentScreen])
 
   const handleSave = async () => {
