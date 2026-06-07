@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, StepByStep } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen5 = () => {
@@ -9,17 +9,23 @@ const Screen5 = () => {
     setScreenReady(true)
   }, [setScreenReady])
 
+  const quotes = ['“Talk more.”', '“Move.”', '“Find space.”', '“Read the defense.”', '“Be more aggressive.”']
+  
+  const steps = [
+    <div className="flex flex-wrap gap-2 py-2">
+      {quotes.map((quote) => (
+        <span key={quote} className="px-3 py-1 bg-lab-ink/5 rounded text-sm italic">{quote}</span>
+      ))}
+    </div>
+  ]
+
   return (
     <ScreenLayout title="From Telling to Designing">
       <TeachingText>
         Coaches often say things like:
       </TeachingText>
 
-      <div className="flex flex-wrap gap-2">
-        {['“Talk more.”', '“Move.”', '“Find space.”', '“Read the defense.”', '“Be more aggressive.”'].map((quote) => (
-          <span key={quote} className="px-3 py-1 bg-lab-ink/5 rounded text-sm italic">{quote}</span>
-        ))}
-      </div>
+      <StepByStep steps={steps} label="Show Coaching Habits" />
 
       <TeachingText>
         But if the activity does not create a <strong>reason</strong> for players to communicate or move, the words may not change much.

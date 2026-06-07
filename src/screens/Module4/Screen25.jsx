@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, FieldMission } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen25 = () => {
@@ -35,6 +35,10 @@ const Screen25 = () => {
         <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Module Takeaway</p>
         <p className="text-xl font-bold italic">“One meaningful lever is enough to start.”</p>
       </div>
+
+      <FieldMission title="The Lever Test">
+        Try one small change in your next practice. Don't call it a "Constraint." Just say: "For this game, the goal is worth 3 points if it happens from [this zone]." Watch how it immediately changes where players look and how they move.
+      </FieldMission>
 
       <div className="pt-4 space-y-4">
         <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-ink/30">You now have:</p>

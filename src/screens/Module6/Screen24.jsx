@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText, KeyIdea } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, KeyIdea, FieldMission } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 import { Award } from 'lucide-react'
 
@@ -25,6 +25,10 @@ const Screen24 = () => {
         <KeyIdea>
           The best coaching isn't about what you say, but what you help your players notice.
         </KeyIdea>
+
+        <FieldMission title="The Launch">
+          Take your upgraded activity to the field. Run it for 15 minutes. Don't over-coach. Just watch. Does the constraint change the problem? Do players notice the target? If yes, you've successfully upgraded your practice.
+        </FieldMission>
         
         <div className="pt-8">
           <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-ink/40">Up Next</p>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText, KeyIdea } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, KeyIdea, StepByStep } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen2 = () => {
@@ -8,6 +8,13 @@ const Screen2 = () => {
   useEffect(() => {
     setScreenReady(true)
   }, [setScreenReady])
+
+  const clearerQuestions = [
+    'Are they failing to speak early enough?',
+    'Is the information they share actually useful?',
+    'Are they failing to claim responsibility?',
+    'Is it a lack of coordination between specific roles?'
+  ]
 
   return (
     <ScreenLayout title="Why Vague Problems Create Weak Constraints">
@@ -19,20 +26,15 @@ const Screen2 = () => {
         But those are not clear practice problems yet. They are <strong>categories</strong>.
       </TeachingText>
 
-      <div className="card space-y-4">
+      <div className="card space-y-6">
         <div className="space-y-1">
           <p className="text-xs font-bold uppercase text-lab-coral tracking-widest">Vague</p>
           <p className="text-lg font-medium italic">“We need better communication.”</p>
         </div>
         <div className="w-full h-px bg-lab-ink/5" />
-        <div className="space-y-2">
+        <div className="space-y-4">
           <p className="text-xs font-bold uppercase text-lab-teal tracking-widest">Clearer Questions</p>
-          <ul className="text-sm grid grid-cols-2 gap-2 text-lab-ink/70">
-            <li>• Speak earlier?</li>
-            <li>• Useful info?</li>
-            <li>• Claim responsibility?</li>
-            <li>• Coordination?</li>
-          </ul>
+          <StepByStep steps={clearerQuestions} />
         </div>
       </div>
 

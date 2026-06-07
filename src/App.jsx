@@ -4,6 +4,7 @@ import { useStore } from './store'
 import { Save, Home, BookOpen, Check } from 'lucide-react'
 
 // Module 1
+import LandingPage from './screens/LandingPage'
 import Screen1 from './screens/Module1/Screen1'
 import Screen2 from './screens/Module1/Screen2'
 import Screen3 from './screens/Module1/Screen3'
@@ -153,29 +154,92 @@ import PCS5 from './screens/PostCourse/Screen5'
 import PCS6 from './screens/PostCourse/Screen6'
 
 import Resources from './screens/Resources'
+import RetrievalScreen from './screens/RetrievalScreen'
+
+// Retrieval Screens
+const M3Retrieval = () => (
+  <RetrievalScreen 
+    nextModule="Module 3"
+    question="What is the primary purpose of a constraint in the Practice Design Lab?"
+    options={[
+      "To punish players for making technical mistakes",
+      "To make practice look more creative and complex",
+      "To shape what players notice, choose, and do",
+      "To force players to use one perfect technique"
+    ]}
+    correctAnswer={2}
+    feedback="Exactly. We use constraints to shape the learning environment, not just to add rules."
+  />
+)
+
+const M4Retrieval = () => (
+  <RetrievalScreen 
+    nextModule="Module 4"
+    question="Why do we need to identify the 'Real Problem' before building a constraint?"
+    options={[
+      "So we can explain the theory to our players",
+      "So the constraint actually addresses the behavior we want to change",
+      "To make the practice session last longer",
+      "To ensure we are using enough technical jargon"
+    ]}
+    correctAnswer={1}
+    feedback="Correct! A constraint that doesn't match the problem is just a random rule."
+  />
+)
+
+const M5Retrieval = () => (
+  <RetrievalScreen 
+    nextModule="Module 5"
+    question="What does it mean for a constraint to 'afford' action?"
+    options={[
+      "It makes the activity more expensive to run",
+      "It restricts players so they only have one choice",
+      "It invites players to explore and find new solutions",
+      "It requires a lot of coaching explanation"
+    ]}
+    correctAnswer={2}
+    feedback="Yes! Good constraints create a landscape that invites exploration rather than just shutting options down."
+  />
+)
+
+const M6Retrieval = () => (
+  <RetrievalScreen 
+    nextModule="Module 6"
+    question="What is an 'Attention Target'?"
+    options={[
+      "The specific information players need to notice to solve the problem",
+      "The player who is making the most mistakes",
+      "A physical target on the field players must hit",
+      "The coach's whiteboard during a tactical timeout"
+    ]}
+    correctAnswer={0}
+    feedback="Perfect. We want players to notice specific cues in the environment to help them make better decisions."
+  />
+)
 
 const screens = [
-  // M1 (0-9)
+  LandingPage,
+  // M1 (1-10)
   Screen1, Screen2, Screen3, Screen4, Screen5, Screen6, Screen7, Screen8, Screen9, Screen10,
-  // M2 (10-29)
+  // M2 (11-30)
   M2S1, M2S2, M2S3, M2S4, M2S5, M2S6, M2S7, M2S8, M2S9, M2S10,
   M2S11, M2S12, M2S13, M2S14, M2S15, M2S16, M2S17, M2S18, M2S19, M2S20,
-  // M3 (30-49)
-  M3S1, M3S2, M3S3, M3S4, M3S5, M3S6, M3S7, M3S8, M3S9, M3S10,
+  // M3 (31-51)
+  M3Retrieval, M3S1, M3S2, M3S3, M3S4, M3S5, M3S6, M3S7, M3S8, M3S9, M3S10,
   M3S11, M3S12, M3S13, M3S14, M3S15, M3S16, M3S17, M3S18, M3S19, M3S20,
-  // M4 (50-74)
-  M4S1, M4S2, M4S3, M4S4, M4S5, M4S6, M4S7, M4S8, M4S9, M4S10,
+  // M4 (52-77)
+  M4Retrieval, M4S1, M4S2, M4S3, M4S4, M4S5, M4S6, M4S7, M4S8, M4S9, M4S10,
   M4S11, M4S12, M4S13, M4S14, M4S15, M4S16, M4S17, M4S18, M4S19, M4S20,
   M4S21, M4S22, M4S23, M4S24, M4S25,
-  // M5 (75-104)
-  M5S1, M5S2, M5S3, M5S4, M5S5, M5S6, M5S7, M5S8, M5S9, M5S10,
+  // M5 (78-108)
+  M5Retrieval, M5S1, M5S2, M5S3, M5S4, M5S5, M5S6, M5S7, M5S8, M5S9, M5S10,
   M5S11, M5S12, M5S13, M5S14, M5S15, M5S16, M5S17, M5S18, M5S19, M5S20,
   M5S21, M5S22, M5S23, M5S24, M5S25, M5S26, M5S27, M5S28, M5S29, M5S30,
-  // M6 (105-128)
-  M6S1, M6S2, M6S3, M6S4, M6S5, M6S6, M6S7, M6S8, M6S9, M6S10,
+  // M6 (109-133)
+  M6Retrieval, M6S1, M6S2, M6S3, M6S4, M6S5, M6S6, M6S7, M6S8, M6S9, M6S10,
   M6S11, M6S12, M6S13, M6S14, M6S15, M6S16, M6S17, M6S18, M6S19, M6S20,
   M6S21, M6S22, M6S23, M6S24,
-  // Post-Course (129-134)
+  // Post-Course (134-139)
   PCS1, PCS2, PCS3, PCS4, PCS5, PCS6
 ]
 
@@ -183,16 +247,16 @@ function App() {
   const { currentScreen, setScreen, screenReady, currentView, setView, reset, saveProgress, isSyncing } = useStore()
   const [saveStatus, setSaveStatus] = useState(false)
   
-  const CurrentScreenComponent = currentView === 'resources' ? Resources : (screens[currentScreen] || Screen1)
+  const CurrentScreenComponent = currentView === 'resources' ? Resources : (screens[currentScreen] || LandingPage)
   const progress = ((currentScreen + 1) / screens.length) * 100
 
   const moduleInfo = useMemo(() => {
-    if (currentScreen < 10) return { number: 1, title: "What Constraints Do" }
-    if (currentScreen < 30) return { number: 2, title: "Start With the Problem" }
-    if (currentScreen < 50) return { number: 3, title: "Decide What Players Need to Notice" }
-    if (currentScreen < 75) return { number: 4, title: "Choose One Constraint Lever" }
-    if (currentScreen < 105) return { number: 5, title: "Build the Constraint" }
-    if (currentScreen < 129) return { number: 6, title: "Observation & Adjustment" }
+    if (currentScreen < 11) return { number: 1, title: "What Constraints Do" }
+    if (currentScreen < 31) return { number: 2, title: "Start With the Problem" }
+    if (currentScreen < 52) return { number: 3, title: "Decide What Players Need to Notice" }
+    if (currentScreen < 78) return { number: 4, title: "Choose One Constraint Lever" }
+    if (currentScreen < 109) return { number: 5, title: "Build the Constraint" }
+    if (currentScreen < 134) return { number: 6, title: "Observation & Adjustment" }
     return { number: "Final", title: "Wrap-Up & Challenge" }
   }, [currentScreen])
 

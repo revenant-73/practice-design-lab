@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, CurrentBuild } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen9 = () => {
@@ -19,10 +19,7 @@ const Screen9 = () => {
       </TeachingText>
 
       <div className="space-y-8 pt-4">
-        <div className="space-y-4">
-          <label className="text-xs font-bold uppercase tracking-widest text-lab-teal">My activity is:</label>
-          <div className="p-4 bg-white hand-drawn italic">{activityUpgradePlan.originalActivity || 'Not yet defined'}</div>
-        </div>
+        <CurrentBuild plan={activityUpgradePlan} />
 
         <div className="space-y-6">
           <div className="space-y-2">

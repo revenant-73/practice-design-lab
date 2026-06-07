@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText, KeyIdea } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, KeyIdea, StepByStep } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen2 = () => {
@@ -15,6 +15,19 @@ const Screen2 = () => {
     { lever: 'Starting Situation', constraint: 'Each round begins immediately after a turnover, and the team has three seconds to recover into useful defensive positions.' }
   ]
 
+  const steps = examples.map((ex, i) => (
+    <div key={i} className="bg-white hand-drawn overflow-hidden border-2 border-lab-ink/5">
+      <div className="bg-lab-teal/10 px-4 py-2 border-b border-lab-ink/5 flex justify-between items-center">
+        <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-teal">Lever</span>
+        <span className="text-sm font-bold text-lab-ink">{ex.lever}</span>
+      </div>
+      <div className="p-4">
+        <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 mb-1">Constraint</p>
+        <p className="text-sm italic text-lab-ink/80">{ex.constraint}</p>
+      </div>
+    </div>
+  ))
+
   return (
     <ScreenLayout title="Lever vs. Constraint">
       <TeachingText>
@@ -22,18 +35,7 @@ const Screen2 = () => {
       </TeachingText>
 
       <div className="space-y-6 py-4">
-        {examples.map((ex, i) => (
-          <div key={i} className="bg-white hand-drawn overflow-hidden border-2 border-lab-ink/5">
-            <div className="bg-lab-teal/10 px-4 py-2 border-b border-lab-ink/5 flex justify-between items-center">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-teal">Lever</span>
-              <span className="text-sm font-bold text-lab-ink">{ex.lever}</span>
-            </div>
-            <div className="p-4">
-              <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 mb-1">Constraint</p>
-              <p className="text-sm italic text-lab-ink/80">{ex.constraint}</p>
-            </div>
-          </div>
-        ))}
+        <StepByStep steps={steps} label="Show Next Example" />
       </div>
 
       <KeyIdea>

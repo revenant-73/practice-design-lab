@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText, KeyIdea } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, KeyIdea, StepByStep } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen2 = () => {
@@ -9,19 +9,24 @@ const Screen2 = () => {
     setScreenReady(true)
   }, [setScreenReady])
 
+  const factors = [
+    'The space and boundaries of the field.',
+    'The scoring system and rewards.',
+    'The number of players or numerical advantages.',
+    'The starting situation or reset points.',
+    'The time limits and shot clocks.',
+    'The pressure level from opponents.',
+    'The specific behavior of the opposition.',
+    'The roles and responsibilities assigned.'
+  ]
+
   return (
     <ScreenLayout title="What Is a Constraint?">
       <TeachingText>
-        A constraint is a purposeful change to an activity.
+        A constraint is a purposeful change to an activity. You can manipulate many different factors:
       </TeachingText>
 
-      <div className="grid grid-cols-2 gap-3">
-        {['The space', 'The scoring', 'The number of players', 'The starting situation', 'The target', 'The time limit', 'The pressure', 'The behavior of the opponent'].map((item) => (
-          <div key={item} className="p-3 bg-lab-teal/5 rounded border border-lab-teal/10 text-sm font-medium text-lab-teal">
-            {item}
-          </div>
-        ))}
-      </div>
+      <StepByStep steps={factors} />
 
       <TeachingText>
         When you change one of those things, you change the <strong>problem</strong> players have to solve. And when you change the problem, you change what players are invited to <strong>notice, choose, and do.</strong>

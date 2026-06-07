@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText, KeyIdea } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, KeyIdea, FieldMission } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen20 = () => {
@@ -39,6 +39,10 @@ const Screen20 = () => {
       <KeyIdea>
         The clearer the problem, the easier the constraint.
       </KeyIdea>
+
+      <FieldMission title="The Problem Hunter">
+        Watch your next session. When you see a breakdown, don't just shout the fix. Ask yourself: "What is the *specific* situation, and what *exactly* is the behavior that leads to this outcome?" Try to define it in one clear sentence.
+      </FieldMission>
 
       <div className="pt-8 space-y-4">
         <h3 className="font-bold text-lab-teal uppercase tracking-widest text-xs">Ready for Module 3?</h3>

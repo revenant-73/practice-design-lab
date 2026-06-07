@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, StepByStep } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen11 = () => {
@@ -9,22 +9,28 @@ const Screen11 = () => {
     setScreenReady(true)
   }, [setScreenReady])
 
+  const options = [
+    'Time limit', 'Score pressure', 'One-ball challenge', 'Double-score streak',
+    'Late-game start', 'Mistake bonus for opp.', 'High-value recovery', 'Limited attempts'
+  ]
+
+  const steps = [
+    <div className="grid grid-cols-2 gap-2 py-4">
+      {options.map((item, i) => (
+        <div key={i} className="text-[10px] font-mono font-bold uppercase tracking-wider p-2 bg-white border border-lab-ink/5 text-lab-ink/60 rounded">
+          {item}
+        </div>
+      ))}
+    </div>
+  ]
+
   return (
     <ScreenLayout title="Lever 7: Pressure">
       <TeachingText>
         Change pressure when players can solve the problem in easy conditions but lose it when the challenge rises.
       </TeachingText>
 
-      <div className="grid grid-cols-2 gap-2 py-4">
-        {[
-          'Time limit', 'Score pressure', 'One-ball challenge', 'Double-score streak',
-          'Late-game start', 'Mistake bonus for opp.', 'High-value recovery', 'Limited attempts'
-        ].map((item, i) => (
-          <div key={i} className="text-[10px] font-mono font-bold uppercase tracking-wider p-2 bg-white border border-lab-ink/5 text-lab-ink/60 rounded">
-            {item}
-          </div>
-        ))}
-      </div>
+      <StepByStep steps={steps} label="Show Pressure Factors" />
 
       <div className="space-y-4 bg-white p-6 rounded-2xl border-2 border-lab-ink/5">
         <h3 className="font-mono font-bold text-lab-teal uppercase tracking-[0.2em] text-[10px]">Example</h3>

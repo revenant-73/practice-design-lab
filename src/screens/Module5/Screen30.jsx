@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, FieldMission } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen30 = () => {
@@ -34,6 +34,10 @@ const Screen30 = () => {
         <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Module Takeaway</p>
         <p className="text-xl font-bold italic">“Build the simplest version that clearly changes the problem.”</p>
       </div>
+
+      <FieldMission title="The Explanation Challenge">
+        Try explaining your new constraint to another person (a spouse, a friend, or another coach) in under 30 seconds. If they look confused, your constraint might be too complex. Aim for: "We're playing [Game], but [One Change] so that players notice [Attention Target]."
+      </FieldMission>
 
       <TeachingText className="pt-2 font-bold text-lab-teal italic">
         In the next module, you will learn how to run it, watch what changes, and adjust without panicking.

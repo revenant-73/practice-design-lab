@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ScreenLayout, Feedback } from '../../components/CourseComponents'
+import { ScreenLayout, Feedback, FieldMission } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const quizData = [
@@ -64,17 +64,22 @@ const Screen10 = () => {
   if (completed) {
     return (
       <ScreenLayout title="Module 1 Complete">
-        <div className="py-12 text-center space-y-6">
-          <div className="w-24 h-24 bg-lab-teal rounded-full mx-auto flex items-center justify-center text-white text-4xl shadow-xl">
+        <div className="py-6 text-center space-y-6">
+          <div className="w-20 h-20 bg-lab-teal rounded-full mx-auto flex items-center justify-center text-white text-3xl shadow-xl">
             ✓
           </div>
           <h2 className="text-2xl font-bold">Great work!</h2>
-          <p className="text-lg text-lab-ink/70">
+          <p className="text-base text-lab-ink/70">
             You've completed Module 1. You now have a solid understanding of what constraints are.
           </p>
-          <div className="card bg-white text-left">
-            <p className="font-bold text-xs uppercase tracking-widest text-lab-teal mb-2">Next Step</p>
-            <p>In the next module, we'll dive into identifying the "Real Problem".</p>
+          
+          <FieldMission title="The Noticing Task">
+            At your next practice, don't change anything yet. Just listen to yourself. Every time you find yourself "telling" a player to do something (e.g., "Find space!"), note it down. These are your first clues for future constraints.
+          </FieldMission>
+
+          <div className="card bg-white text-left p-4 rounded-xl border border-lab-ink/5">
+            <p className="font-bold text-[10px] uppercase tracking-widest text-lab-teal mb-1">Next Step</p>
+            <p className="text-sm">In the next module, we'll dive into identifying the "Real Problem".</p>
           </div>
         </div>
       </ScreenLayout>

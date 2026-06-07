@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
+import { ScreenLayout, TeachingText, FieldMission } from '../../components/CourseComponents'
 import { useStore } from '../../store'
 
 const Screen20 = () => {
@@ -38,6 +38,10 @@ const Screen20 = () => {
           “Before you change the activity, decide what you want players to notice.”
         </p>
       </div>
+
+      <FieldMission title="The Early Sign">
+        Pick one of your players. For one full activity, only watch what they are looking at *before* they receive the ball or make a big choice. Do they see the space? The opponent? Their teammate? This is your attention target in action.
+      </FieldMission>
 
       <div className="space-y-4 pt-4 border-t border-lab-ink/5">
         <h4 className="text-[10px] font-mono font-bold uppercase tracking-widest text-lab-ink/30">Before Moving On, you have:</h4>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { CheckCircle2, AlertCircle, Sparkles, ChevronDown } from 'lucide-react'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -66,11 +67,14 @@ export const KeyIdea = ({ children }) => (
 
 export const Feedback = ({ isCorrect, children, onNext, nextLabel = "Next Question" }) => (
   <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-    <div className={`p-4 organic-border ${isCorrect ? 'bg-lab-teal/5 border-lab-teal/30 text-lab-teal' : 'bg-lab-coral/5 border-lab-coral/30 text-lab-coral'}`}>
-      <p className="font-mono font-bold text-[9px] uppercase tracking-[0.2em] mb-2">
-        {isCorrect ? '✓ Verification Successful' : '× Field Correction'}
-      </p>
-      <p className="text-lab-ink text-base leading-snug font-sans">
+    <div className={`p-4 organic-border border-2 ${isCorrect ? 'bg-lab-teal/10 border-lab-teal text-lab-ink' : 'bg-lab-coral/10 border-lab-coral text-lab-ink'}`}>
+      <div className="flex items-center gap-2 mb-2">
+        {isCorrect ? <CheckCircle2 size={16} className="text-lab-teal" /> : <AlertCircle size={16} className="text-lab-coral" />}
+        <p className={`font-mono font-bold text-[9px] uppercase tracking-[0.2em] ${isCorrect ? 'text-lab-teal' : 'text-lab-coral'}`}>
+          {isCorrect ? '✓ Verification Successful' : '× Field Correction'}
+        </p>
+      </div>
+      <p className="text-base leading-snug font-sans">
         {children}
       </p>
     </div>
@@ -78,7 +82,7 @@ export const Feedback = ({ isCorrect, children, onNext, nextLabel = "Next Questi
     {onNext && (
       <button 
         onClick={onNext}
-        className="w-full btn-primary py-3 flex items-center justify-center gap-3"
+        className="w-full btn-primary py-3 flex items-center justify-center gap-3 bg-lab-ink text-white rounded-xl"
       >
         <span className="font-bold uppercase tracking-widest text-[10px]">{nextLabel}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -228,3 +232,94 @@ export const ReflectionBox = ({ value, onChange, placeholder, minHeight = "120px
     </div>
   </div>
 )
+
+export const CurrentBuild = ({ plan }) => {
+  const fields = [
+    { label: 'Activity', value: plan.originalActivity, color: 'text-lab-ink' },
+    { label: 'Problem', value: plan.problem, color: 'text-lab-coral' },
+    { label: 'Attention Target', value: plan.attentionTarget, color: 'text-lab-teal' },
+    { label: 'Constraint', value: plan.constraint, color: 'text-lab-teal' },
+  ]
+
+  const activeFields = fields.filter(f => f.value && f.value.length > 0)
+
+  if (activeFields.length === 0) return null
+
+  return (
+    <div className="mt-8 pt-8 border-t-2 border-lab-ink/5">
+      <div className="flex items-center gap-3 mb-4">
+        <Sparkles size={14} className="text-lab-teal" />
+        <h4 className="font-mono font-bold text-[10px] uppercase tracking-[0.2em] text-lab-ink/40">Current Activity Build</h4>
+      </div>
+      <div className="grid grid-cols-1 gap-3">
+        {activeFields.map((field, i) => (
+          <div key={i} className="bg-white/50 p-3 rounded-lg border border-lab-ink/5">
+            <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-lab-ink/30 mb-1">{field.label}</p>
+            <p className={`text-xs font-bold leading-tight ${field.color}`}>{field.value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export const FieldMission = ({ title, children }) => (
+  <div className="mt-8 p-6 hand-drawn bg-lab-ink text-lab-cream relative overflow-hidden group">
+    <div className="absolute top-0 right-0 w-24 h-24 bg-lab-teal/20 rounded-full -mr-12 -mt-12 blur-2xl group-hover:bg-lab-teal/30 transition-all" />
+    <div className="relative z-10">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-1.5 h-1.5 rounded-full bg-lab-teal animate-pulse" />
+        <h4 className="font-mono font-bold text-[10px] uppercase tracking-[0.3em] text-lab-teal">Field Mission: {title}</h4>
+      </div>
+      <div className="text-sm leading-relaxed italic opacity-90">
+        {children}
+      </div>
+      <div className="mt-4 flex items-center gap-2 text-[9px] font-mono font-bold uppercase tracking-widest text-lab-teal/60">
+        <span>Target: Next Practice</span>
+        <div className="h-px flex-1 bg-lab-teal/20" />
+      </div>
+    </div>
+  </div>
+)
+
+export const StepByStep = ({ steps, label = "Show Next Factor" }) => {
+  const [visibleCount, setVisibleCount] = React.useState(1)
+
+  return (
+    <div className="space-y-4">
+      {steps.slice(0, visibleCount).map((step, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="w-full"
+        >
+          {typeof step === 'string' ? (
+            <div className="flex gap-4 items-start">
+              <div className="w-6 h-6 rounded-full bg-lab-teal/10 flex items-center justify-center shrink-0 mt-1">
+                <span className="text-[10px] font-mono font-bold text-lab-teal">{i + 1}</span>
+              </div>
+              <p className="text-sm leading-relaxed text-lab-ink/80">{step}</p>
+            </div>
+          ) : (
+            step
+          )}
+        </motion.div>
+      ))}
+      {visibleCount < steps.length && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setVisibleCount(v => v + 1)}
+          className="w-full mt-6 py-4 bg-lab-teal/10 hover:bg-lab-teal/20 text-lab-teal rounded-xl border-2 border-dashed border-lab-teal/30 transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
+        >
+          <span className="text-xs font-mono font-bold uppercase tracking-[0.2em]">{label}</span>
+          <ChevronDown size={18} className="group-hover:translate-y-0.5 transition-transform" />
+          <div className="absolute inset-0 bg-lab-teal/5 animate-pulse rounded-xl pointer-events-none" />
+        </motion.button>
+      )}
+    </div>
+  )
+}
