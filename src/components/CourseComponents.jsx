@@ -50,9 +50,9 @@ export const ScreenLayout = ({ title, children }) => (
 )
 
 export const TeachingText = ({ children, className = "" }) => (
-  <p className={`text-base leading-relaxed text-lab-ink/90 font-sans selection:bg-lab-teal/30 ${className}`}>
+  <div className={`text-base leading-relaxed text-lab-ink/90 font-sans selection:bg-lab-teal/30 ${className}`}>
     {children}
-  </p>
+  </div>
 )
 
 export const KeyIdea = ({ children }) => (
