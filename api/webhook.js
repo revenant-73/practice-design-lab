@@ -2,7 +2,7 @@ import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import { users } from '../src/db/schema';
 import { eq } from 'drizzle-orm';
-import crypto from 'crypto';
+import Stripe from 'stripe';
 
 const client = createClient({
   url: process.env.TURSO_CONNECTION_URL,
@@ -10,31 +10,56 @@ const client = createClient({
 });
 
 const db = drizzle(client);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+async function getRawBody(readable) {
+  const chunks = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // 1. Verify the signature from Lemon Squeezy
-  const secret = process.env.LEMON_SQUEEZY_WEBHOOK_SECRET;
-  const hmac = crypto.createHmac('sha256', secret);
-  const digest = Buffer.from(hmac.update(JSON.stringify(req.body)).digest('hex'), 'utf8');
-  const signature = Buffer.from(req.headers['x-signature'] || '', 'utf8');
+  const sig = req.headers['stripe-signature'];
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if (!crypto.timingSafeEqual(digest, signature)) {
-    return res.status(401).json({ error: 'Invalid signature' });
+  let event;
+
+  try {
+    const rawBody = await getRawBody(req);
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  const payload = req.body;
-  const eventName = payload.meta.event_name;
-  const email = payload.data.attributes.user_email;
+  // Handle the checkout.session.completed event
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const email = session.customer_details.email;
+    const userId = session.metadata.userId;
 
-  // 2. Handle the "order_created" event
-  if (eventName === 'order_created' || eventName === 'subscription_created') {
     try {
-      // Find the user by email
-      const user = await db.select().from(users).where(eq(users.email, email)).get();
+      // Find the user by ID or email
+      let user = null;
+      if (userId) {
+        user = await db.select().from(users).where(eq(users.id, userId)).get();
+      }
+      
+      if (!user && email) {
+        user = await db.select().from(users).where(eq(users.email, email)).get();
+      }
 
       if (user) {
         // Unlock access
@@ -45,12 +70,13 @@ export default async function handler(req, res) {
           })
           .where(eq(users.id, user.id));
         
-        console.log(`Access unlocked for user: ${email}`);
-      } else {
-        // If user doesn't exist yet (e.g. they paid before starting), we create them
-        const userId = btoa(email).replace(/=/g, '');
+        console.log(`Access unlocked for user: ${email} (${user.id})`);
+      } else if (email) {
+        // If user doesn't exist yet, we create them
+        // Using the same ID generation logic as before if userId wasn't provided
+        const newUserId = userId || btoa(email).replace(/=/g, '');
         await db.insert(users).values({
-          id: userId,
+          id: newUserId,
           email: email,
           hasAccess: true,
           updatedAt: new Date(),
@@ -66,5 +92,5 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ message: 'Event ignored' });
+  return res.status(200).json({ received: true });
 }

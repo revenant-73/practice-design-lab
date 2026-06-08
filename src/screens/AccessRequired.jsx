@@ -6,12 +6,21 @@ import { Lock, Sparkles, Rocket, RefreshCw } from 'lucide-react'
 const AccessRequired = () => {
   const { setAccess, setScreenReady, email, userId, loadProgress } = useStore()
   const [isChecking, setIsChecking] = React.useState(false)
+  const [showThankYou, setShowThankYou] = React.useState(false)
 
   useEffect(() => {
+    // Check for success URL parameter
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('success') === 'true' && userId) {
+      setShowThankYou(true)
+      handleCheckStatus()
+      // Clean up URL without refreshing
+      window.history.replaceState({}, document.title, window.location.pathname)
+    }
+
     // We don't want the "Next" button in the footer to be active yet
-    // The user must pay or bypass first
     setScreenReady(false)
-  }, [setScreenReady])
+  }, [setScreenReady, userId])
 
   const handleCheckStatus = async () => {
     if (!userId) return
@@ -20,15 +29,33 @@ const AccessRequired = () => {
     setIsChecking(false)
   }
 
-  const handlePurchase = () => {
-    const checkoutUrl = new URL('https://practice-design-lab.lemonsqueezy.com/checkout/buy/79c74bfd-0e95-45f5-b5d7-29523292197d')
-    
-    // Prefill the email to make it easier for the coach
-    if (email) {
-      checkoutUrl.searchParams.set('checkout[email]', email)
+  const handlePurchase = async () => {
+    setIsChecking(true)
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          userId,
+          origin: window.location.origin,
+        }),
+      })
+
+      const data = await response.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        throw new Error(data.error || 'Failed to create checkout session')
+      }
+    } catch (error) {
+      console.error('Purchase error:', error)
+      alert('Something went wrong. Please try again.')
+    } finally {
+      setIsChecking(false)
     }
-    
-    window.open(checkoutUrl.toString(), '_blank')
   }
 
   const handleBypass = () => {
@@ -47,6 +74,18 @@ const AccessRequired = () => {
       <TeachingText className="text-center px-4">
         You've completed the foundation. Now it's time to build your <strong className="text-lab-teal">Activity Upgrade Plan</strong>.
       </TeachingText>
+
+      {showThankYou && (
+        <div className="mx-4 p-4 bg-lab-teal/10 border-2 border-lab-teal rounded-xl text-center space-y-2 animate-in fade-in zoom-in duration-500">
+          <h4 className="font-bold text-lab-teal flex items-center justify-center gap-2">
+            <Sparkles size={18} />
+            Thank You for Unlocking!
+          </h4>
+          <p className="text-xs text-lab-ink/80">
+            Payment confirmed. We're unlocking your access now...
+          </p>
+        </div>
+      )}
 
       <div className="space-y-4 py-4">
         <div className="bg-white p-5 hand-drawn space-y-3 relative overflow-hidden group">
