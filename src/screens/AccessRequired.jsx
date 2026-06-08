@@ -32,7 +32,11 @@ const AccessRequired = () => {
   const handlePurchase = async () => {
     setIsChecking(true)
     try {
-      const response = await fetch('/api/create-checkout-session', {
+      const apiUrl = window.location.hostname === 'localhost' 
+        ? 'https://practice-design-lab.vercel.app/api/create-checkout-session'
+        : '/api/create-checkout-session'
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
