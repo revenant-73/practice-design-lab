@@ -10,7 +10,6 @@ const client = createClient({
 });
 
 const db = drizzle(client);
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const config = {
   api: {
@@ -34,6 +33,22 @@ export default async function handler(req, res) {
   const sig = req.headers['stripe-signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+  if (!webhookSecret) {
+    console.error('STRIPE_WEBHOOK_SECRET is missing');
+    return res.status(500).json({ error: 'Webhook configuration error' });
+  }
+
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.error('STRIPE_SECRET_KEY is missing');
+    return res.status(500).json({ error: 'Stripe configuration error' });
+  }
+
+  if (!process.env.TURSO_CONNECTION_URL || !process.env.TURSO_AUTH_TOKEN) {
+    console.error('Turso configuration is missing');
+    return res.status(500).json({ error: 'Database configuration error' });
+  }
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   let event;
 
   try {
@@ -47,8 +62,13 @@ export default async function handler(req, res) {
   // Handle the checkout.session.completed event
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const email = session.customer_details.email;
-    const userId = session.metadata.userId;
+    const email = session.customer_details?.email || session.customer_email;
+    const userId = session.metadata?.userId;
+
+    if (!email && !userId) {
+      console.error('Webhook Error: No email or userId found in session');
+      return res.status(400).json({ error: 'No email or userId found in session' });
+    }
 
     try {
       // Find the user by ID or email
@@ -74,12 +94,13 @@ export default async function handler(req, res) {
       } else if (email) {
         // If user doesn't exist yet, we create them
         // Using the same ID generation logic as before if userId wasn't provided
-        const newUserId = userId || btoa(email).replace(/=/g, '');
+        const newUserId = userId || Buffer.from(email).toString('base64').replace(/=/g, '');
         await db.insert(users).values({
           id: newUserId,
           email: email,
           hasAccess: true,
           updatedAt: new Date(),
+          createdAt: new Date(),
         });
         
         console.log(`New user created and unlocked: ${email}`);
@@ -88,7 +109,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     } catch (error) {
       console.error('Webhook DB Error:', error);
-      return res.status(500).json({ error: 'Internal server error' });
+      return res.status(500).json({ error: `Internal server error: ${error.message}` });
     }
   }
 

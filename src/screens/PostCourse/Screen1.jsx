@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScreenLayout, TeachingText } from '../../components/CourseComponents'
 import { useStore } from '../../store'
+import { Copy, Check, Download } from 'lucide-react'
 
 const Screen1 = () => {
   const { activityUpgradePlan, setScreenReady } = useStore()
+  const [copied, setCopied] = useState(false)
   
   useEffect(() => {
     setScreenReady(true)
@@ -11,11 +13,44 @@ const Screen1 = () => {
 
   const plan = activityUpgradePlan
 
+  const fullPlanText = `
+ACTIVITY UPGRADE PLAN
+---------------------
+Activity: ${plan.m5DraftOriginalActivity || plan.originalActivity}
+Problem: ${plan.m5DraftProblem || plan.problem}
+Attention Target: ${plan.m5DraftAttentionTarget || (plan.m3TargetNotice ? `I want players to notice ${plan.m3TargetNotice} when ${plan.m3TargetWhen} so they can ${plan.m3TargetSoTheyCan}.` : plan.attentionTarget)}
+Lever: ${plan.m4ChosenLever}
+Constraint: ${plan.m5FinalConstraint || plan.constraint}
+Success Condition: ${plan.m4SuccessCriteria || plan.m5DraftSuccessCondition}
+Coaching Question: ${plan.m6RefinedCoachingQuestion || plan.coachingQuestion}
+Watch For: ${plan.m6WatchFor}
+Adjustments:
+- Too Easy: ${plan.m6AdjTooEasy}
+- Too Hard: ${plan.m6AdjTooHard}
+- Too Weird: ${plan.m6AdjTooWeird}
+- Nothing Changes: ${plan.m6AdjNothingChanges}
+  `.trim()
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(fullPlanText)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
     <ScreenLayout title="Your Activity Upgrade Plan Is Ready">
-      <TeachingText>
-        You have completed the core build. Review your practice-ready activity upgrade before moving on.
-      </TeachingText>
+      <div className="flex items-center justify-between gap-4 mb-2">
+        <TeachingText className="flex-1">
+          Review your practice-ready activity upgrade before moving on.
+        </TeachingText>
+        <button 
+          onClick={handleCopy}
+          className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all text-[10px] font-bold uppercase tracking-widest ${copied ? 'bg-lab-teal border-lab-teal text-white' : 'border-lab-ink/10 text-lab-ink/40 hover:border-lab-teal/40 hover:text-lab-teal'}`}
+        >
+          {copied ? <Check size={12} /> : <Copy size={12} />}
+          {copied ? 'Copied' : 'Copy Plan'}
+        </button>
+      </div>
 
       <div className="space-y-4 mt-6">
         <ReviewSection label="Activity I already use" value={plan.m5DraftOriginalActivity || plan.originalActivity} />
