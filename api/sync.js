@@ -1,6 +1,6 @@
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
-import { progress, users } from '../src/db/schema';
+import { progress, users } from '../src/db/schema.js';
 import { eq } from 'drizzle-orm';
 
 const client = createClient({
